@@ -13,7 +13,7 @@ async function bootstrap() {
     type: VersioningType.URI,
     // prefix: '/api/v1'
   });
-  app.use(csurf({
+  const csrfProtection = csurf({
     cookie: {
       key: 'XSRF-TOKEN',// can set a custome cookie name.
       path: "/",
@@ -27,7 +27,19 @@ async function bootstrap() {
 
       // signed: true,
     },
-  }));
+  })
+
+  app.use(csrfProtection, function (req, res, next) {
+    // var token = req.csrfToken();
+    var token = req.csrfToken();
+    res.cookie('XSRF-TOKEN', token);
+    // console.log(res);
+
+    res.locals.csrfToken = token;
+    next();
+  });
+  app.use(csrfProtection);
+
   await app.listen(3590);
 }
 bootstrap();
