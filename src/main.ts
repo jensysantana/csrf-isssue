@@ -15,29 +15,20 @@ async function bootstrap() {
   });
   const csrfProtection = csurf({
     cookie: {
-      key: 'XSRF-TOKEN',// can set a custome cookie name.
-      path: "/",
+      key: 'XSRF-TOKEN', // can set a custome cookie name.
+      path: '/',
       httpOnly: true,
       secure: false,
       // maxAge: -20000, // 14 days,
       maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days,
       // maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days,
       sameSite: 'lax',
-      ignoreRoutes: ['admin', 'api'],
+      // ignoreRoutes: ['admin', 'api'],
 
       // signed: true,
     },
-  })
-
-  app.use(csrfProtection, function (req, res, next) {
-    // var token = req.csrfToken();
-    var token = req.csrfToken();
-    res.cookie('XSRF-TOKEN', token);
-    // console.log(res);
-
-    res.locals.csrfToken = token;
-    next();
   });
+
   app.use(csrfProtection);
 
   await app.listen(3590);
